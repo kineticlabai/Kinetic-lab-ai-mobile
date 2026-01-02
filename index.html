@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINETIC LAB AI | NEURAL INFRASTRUCTURE</title>
+    <title>KINETIC LAB AI | INDUSTRIAL NEURAL SYSTEMS</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #030305;
             --accent: #8a2be2;
-            --accent-glow: rgba(138, 43, 226, 0.4);
-            --border: rgba(255, 255, 255, 0.07);
-            --card-bg: rgba(255, 255, 255, 0.02);
+            --accent-glow: rgba(138, 43, 226, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --card-bg: #030305;
         }
 
         html, body { 
@@ -23,159 +23,24 @@
             overflow-x: hidden;
         }
 
-        /* Ambient Neural Background */
-        .neural-bg {
+        /* Neural Background Visualizer */
+        #canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 50% -10%, var(--accent-glow), transparent 40%),
-                radial-gradient(circle at 0% 100%, rgba(138, 43, 226, 0.05), transparent 30%);
-            z-index: 0; pointer-events: none;
+            z-index: 0; pointer-events: none; opacity: 0.4;
+        }
+
+        .ambient-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -10%, var(--accent-glow), transparent 60%);
+            z-index: 1; pointer-events: none;
         }
 
         nav { 
-            padding: 30px 6%; 
+            padding: 25px 6%; 
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             position: sticky; top: 0; z-index: 100;
         }
 
-        .logo { font-weight: 800; letter-spacing: 6px; font-size: 0.85rem; text-transform: uppercase; }
-        .logo span { font-weight: 200; opacity: 0.4; }
-        .sys-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); }
-
-        .hero { 
-            text-align: center; 
-            padding: 120px 6% 60px;
-            position: relative; z-index: 1;
-        }
-
-        .tagline { 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 0.7rem; color: var(--accent); 
-            letter-spacing: 4px; margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .hero h1 { 
-            font-size: clamp(2.5rem, 8vw, 5rem); 
-            font-weight: 200; margin: 0; letter-spacing: -3px; line-height: 0.95;
-        }
-
-        .hero h1 b { font-weight: 800; color: #fff; }
-
-        /* Tech Grid Layout */
-        .card-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 2px; /* Precision hairline grid */
-            background: var(--border);
-            margin: 40px 6% 100px;
-            border: 1px solid var(--border);
-            position: relative; z-index: 1;
-        }
-
-        .glass-card {
-            background: var(--bg);
-            padding: 60px 40px;
-            transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card:hover {
-            background: rgba(138, 43, 226, 0.03);
-        }
-
-        .card-id { 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 0.6rem; color: var(--accent); 
-            margin-bottom: 40px; display: block;
-        }
-
-        .glass-card h2 { 
-            font-size: 1.8rem; font-weight: 300; 
-            margin: 0 0 20px 0; letter-spacing: -1px;
-        }
-
-        .glass-card p { 
-            color: #777; line-height: 1.6; 
-            font-size: 0.95rem; margin-bottom: 40px;
-            min-height: 80px;
-        }
-
-        /* Order Memorization Badge */
-        .memory-chip {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 12px; background: rgba(138, 43, 226, 0.1);
-            border: 1px solid var(--accent); border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem; color: #fff; margin-bottom: 20px;
-        }
-
-        .pulse-icon {
-            width: 6px; height: 6px; background: #00ff88; border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .btn-tech {
-            width: 100%; padding: 16px; 
-            background: transparent; border: 1px solid #333;
-            color: #fff; font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; font-weight: 700; cursor: pointer;
-            transition: 0.3s; text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .btn-tech:hover {
-            border-color: #fff; background: #fff; color: #000;
-        }
-
-        /* OS Terminal Footer */
-        footer {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #000; border-top: 1px solid var(--border);
-            padding: 10px 6%; z-index: 100;
-        }
-
-        #console {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem; color: #444;
-        }
-
-        @media (max-width: 768px) {
-            .hero { padding: 80px 6% 40px; }
-            .hero h1 { font-size: 3rem; }
-            .card-grid { margin: 20px 0; border: none; }
-            .glass-card { padding: 40px 25px; border-bottom: 1px solid var(--border); }
-        }
-    </style>
-</head>
-<body>
-
-<div class="neural-bg"></div>
-
-<nav>
-    <div class="logo">KINETIC <span>LAB AI</span></div>
-    <div class="sys-time" id="clock">00:00:00</div>
-</nav>
-
-<main class="hero">
-    <div class="tagline">Neural Execution // v.12</div>
-    <h1>Industrial <b>Intelligence</b></h1>
-</main>
-
-<section class="card-grid">
-    <div class="glass-card" onmouseenter="terminal('INITIATING_ORDER_MEMORIZATION_CORE...')" onmouseleave="terminal('AWAITING_INPUT')">
-        <span class="card-id">MOD_01 // HOSPITALITY</span>
-        <div class="memory-chip">
-            <div class="pulse-icon"></div> ORDER_MEMORY_ACTIVE
-        </div>
-        <h2>Guest Concierge</h2>
-        <p>Agents specialized in **autonomous order-taking** and real-time memorization for high-velocity guest environments.</p>
-        <button class="btn-tech" onclick="alert('Deployment Successful: Memory Core Linked.')">Execute Node</button>
-    </div>
-
-    <div class="glass-card" onmouseenter
+        .logo { font-weight: 800; letter-spacing: 6px; font-size: 0.85rem; text-transform: uppercase
