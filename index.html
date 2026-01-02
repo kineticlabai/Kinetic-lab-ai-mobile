@@ -3,109 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINETIC LABS AI | NEURAL INTERFACE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700&display=swap" rel="stylesheet">
+    <title>Kinetic Labs AI | Neural Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #030508;
+        /* FORCE ULTRA-DARK THEME */
+        :root {
+            --bg: #020408;
+            --accent: #4facfe;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            background-color: var(--bg) !important;
             color: white;
-            margin: 0;
             font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* THE NEURAL BACKGROUND - FORCED DEPTH */
+        #neuralNet {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; background: radial-gradient(circle at 50% 50%, #0d162a 0%, #020408 100%);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10; /* Ensures content sits ABOVE the background */
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* The Neural Canvas */
-        #neuralCanvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #0a111e 0%, #030508 100%);
         }
 
         header {
             width: 100%;
-            padding: 40px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
-        .logo-area {
-            display: flex; align-items: center; gap: 15px;
-            font-weight: 700; letter-spacing: 4px; font-size: 1.2rem;
-        }
-
-        .status-pill {
-            font-size: 0.5rem; border: 1px solid #4facfe;
-            padding: 2px 8px; border-radius: 4px; color: #4facfe;
-            box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+        .logo { 
+            font-weight: 900; letter-spacing: 5px; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
         h1 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-top: 50px; text-transform: uppercase;
-            letter-spacing: 10px; font-weight: 700; text-align: center;
+            font-size: clamp(1.8rem, 8vw, 3.5rem);
+            font-weight: 900; text-transform: uppercase;
+            letter-spacing: 12px; margin: 60px 0 40px;
+            text-align: center; line-height: 1.2;
         }
 
-        .container {
-            display: flex; gap: 30px; padding: 60px 20px;
+        /* THE GLASS CARDS - EXACT REPLICA */
+        .grid {
+            display: flex; gap: 30px; padding: 40px 20px;
             flex-wrap: wrap; justify-content: center;
-            position: relative; z-index: 1;
+            max-width: 1200px;
         }
 
-        /* --- THE EXACT PHOTO CARDS --- */
         .card {
-            width: 320px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 50px 35px;
+            width: 340px;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-top: 1px solid rgba(79, 172, 254, 0.5); /* Glowing top edge */
+            border-radius: 30px;
+            padding: 60px 40px;
             text-align: center;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.4s ease-out;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .card:hover {
             transform: translateY(-15px);
-            border-color: rgba(79, 172, 254, 0.5);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 30px rgba(79, 172, 254, 0.2);
         }
 
-        /* Blue Top Glow Edge */
-        .card::before {
-            content: ""; position: absolute; top: 0; left: 15%; width: 70%; height: 2px;
-            background: linear-gradient(90deg, transparent, #4facfe, transparent);
-            opacity: 0.5;
-        }
-
-        .icon {
-            font-size: 3rem; margin-bottom: 25px; display: block;
-            filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.4));
-        }
-
-        h2 { font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; color: #fff; }
-        p { color: #a1a1a1; line-height: 1.7; font-size: 0.9rem; font-weight: 300; margin-bottom: 35px; height: 100px; }
+        .icon { font-size: 3.5rem; margin-bottom: 30px; display: block; filter: drop-shadow(0 0 10px var(--accent)); }
+        h2 { font-size: 1.4rem; letter-spacing: 3px; margin-bottom: 20px; font-weight: 900; }
+        p { color: #aaa; line-height: 1.8; font-size: 0.9rem; margin-bottom: 40px; height: 100px; }
 
         .btn {
-            background: transparent; border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 12px 30px; border-radius: 50px;
-            font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
+            background: transparent; border: 1px solid var(--accent);
+            color: white; padding: 14px 40px; border-radius: 100px;
+            font-weight: 900; font-size: 0.7rem; text-transform: uppercase;
             cursor: pointer; transition: 0.3s;
         }
 
-        .btn:hover {
-            background: #4facfe; color: #000; border-color: #4facfe;
-            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+        .btn:hover { background: var(--accent); color: black; box-shadow: 0 0 20px var(--accent); }
+
+        footer { padding: 60px; opacity: 0.4; font-size: 0.7rem; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="neuralNet"></canvas>
+
+    <div class="content-layer">
+        <header>
+            <div class="logo">⚡ KINETIC LABS AI</div>
+        </header>
+
+        <h1>Autonomous Agent Solutions</h1>
+
+        <div class="grid">
+            <div class="card">
+                <span class="icon">🍽️</span>
+                <h2>Hospitality</h2>
+                <p>Memorizes menu items, prices, and guest preferences. Takes accurate orders and finalizes payments seamlessly.</p>
+                <button class="btn">Deploy Agent</button>
+            </div>
+
+            <div class="card">
+                <span class="icon">📅</span>
+                <h2>Scheduling</h2>
+                <p>Automated appointment booking, data entry, and calendar management across all business platforms.</p>
+                <button class="btn">Deploy Agent</button>
+            </div>
+
+            <div class="card">
+                <span class="icon">💬</span>
+                <h2>Customer Care</h2>
+                <p>Specialized FAQ resolution and technical support agents with 24/7 availability for your customers.</p>
+                <button class="btn">Deploy Agent</button>
+            </div>
+        </div>
+
+        <footer>© 2024 KINETIC LABS AI // ALL SYSTEMS OPERATIONAL</footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('neuralNet');
+        const ctx = canvas.getContext('2d');
+        let dots = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            dots = [];
+            for (let i = 0; i < 80; i++) {
+                dots.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
         }
 
-        footer {
-            margin-top: auto; padding: 40px; text-align
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(79, 172, 254, 0.3)";
+            dots.forEach(d => {
+                d.x += d.vx; d.y += d.vy;
+                if (d.x < 0 || d.x > canvas.width) d.vx *= -1;
+                if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                dots.forEach(d2 => {
+                    let dist = Math.hypot(d.x - d2.x, d.y - d2.y);
+                    if (dist < 150) {
+                        ctx.strokeStyle = `rgba(79, 172, 254, ${1 - dist/150})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d2.x, d2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init(); draw();
+    </script>
+</body>
+</html>
