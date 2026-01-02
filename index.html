@@ -3,155 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinetic Labs AI | Autonomous Agent Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>KINETIC LABS AI | NEURAL INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #080a0f;
-            --accent-blue: #4facfe;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
+        body {
+            background-color: #030508;
+            color: white;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
             overflow-x: hidden;
-            height: 100%;
         }
 
-        /* Background Glow Effects */
-        .background-visuals {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a2235 0%, #080a0f 100%);
+        /* The Neural Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
-        }
-
-        /* The blue "connective" dots/lines background */
-        .dots-overlay {
-            position: absolute; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(79, 172, 254, 0.15) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.5;
+            background: radial-gradient(circle at 50% 50%, #0a111e 0%, #030508 100%);
         }
 
         header {
-            padding: 40px 0; text-align: center;
+            width: 100%;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
 
-        .logo {
-            font-size: 1.5rem; font-weight: 700; letter-spacing: 2px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+        .logo-area {
+            display: flex; align-items: center; gap: 15px;
+            font-weight: 700; letter-spacing: 4px; font-size: 1.2rem;
         }
 
-        .online-status {
-            font-size: 0.6rem; border: 1px solid #444; padding: 2px 8px;
-            border-radius: 4px; color: #888; text-transform: uppercase;
+        .status-pill {
+            font-size: 0.5rem; border: 1px solid #4facfe;
+            padding: 2px 8px; border-radius: 4px; color: #4facfe;
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
         }
 
         h1 {
-            text-transform: uppercase; font-size: 2.2rem;
-            letter-spacing: 4px; margin-top: 60px; font-weight: 700;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-top: 50px; text-transform: uppercase;
+            letter-spacing: 10px; font-weight: 700; text-align: center;
         }
 
-        .card-container {
-            display: flex; justify-content: center; gap: 30px;
-            padding: 50px 5%; flex-wrap: wrap;
+        .container {
+            display: flex; gap: 30px; padding: 60px 20px;
+            flex-wrap: wrap; justify-content: center;
+            position: relative; z-index: 1;
         }
 
-        /* --- GLASS CARD DESIGN --- */
-        .glass-card {
-            background: var(--glass-bg);
+        /* --- THE EXACT PHOTO CARDS --- */
+        .card {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            width: 320px; padding: 50px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 50px 35px;
             text-align: center;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 30px rgba(79, 172, 254, 0.2);
-        }
-
-        .card-icon {
-            font-size: 3rem; margin-bottom: 25px; display: block;
-        }
-
-        h2 { font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-        p { color: #b0b3b8; font-size: 0.95rem; line-height: 1.6; min-height: 100px; }
-
-        .btn-deploy {
+        .card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(79, 172, 254, 0.5);
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: #fff; padding: 12px 30px; border-radius: 50px;
-            text-transform: uppercase; font-size: 0.75rem; font-weight: 700;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Blue Top Glow Edge */
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 15%; width: 70%; height: 2px;
+            background: linear-gradient(90deg, transparent, #4facfe, transparent);
+            opacity: 0.5;
+        }
+
+        .icon {
+            font-size: 3rem; margin-bottom: 25px; display: block;
+            filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.4));
+        }
+
+        h2 { font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; color: #fff; }
+        p { color: #a1a1a1; line-height: 1.7; font-size: 0.9rem; font-weight: 300; margin-bottom: 35px; height: 100px; }
+
+        .btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 12px 30px; border-radius: 50px;
+            font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
             cursor: pointer; transition: 0.3s;
         }
 
-        .btn-deploy:hover {
-            background: var(--accent-blue);
-            color: #000; font-weight: 800;
+        .btn:hover {
+            background: #4facfe; color: #000; border-color: #4facfe;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
         }
 
         footer {
-            text-align: center; color: #555; font-size: 0.8rem;
-            padding: 60px 0;
-        }
-
-        @media (max-width: 768px) {
-            .card-container { flex-direction: column; align-items: center; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="background-visuals">
-        <div class="dots-overlay"></div>
-    </div>
-
-    <header>
-        <div class="logo">
-            <span style="color:var(--accent-blue)">⚡</span> KINETIC LABS AI 
-            <span class="online-status">● Online</span>
-        </div>
-        <h1>Autonomous Agent Solutions</h1>
-    </header>
-
-    <div class="card-container">
-        <div class="glass-card">
-            <span class="card-icon">🍽️</span>
-            <h2>Hospitality</h2>
-            <p>Memorizes menu items, prices, and guest preferences. Processes accurate orders and handles final payments seamlessly.</p>
-            <button class="btn-deploy">Deploy Agent</button>
-        </div>
-
-        <div class="glass-card">
-            <span class="card-icon">📅</span>
-            <h2>Scheduling & Data</h2>
-            <p>Intelligent appointment booking, calendar management, and automated data entry across platforms.</p>
-            <button class="btn-deploy">Deploy Agent</button>
-        </div>
-
-        <div class="glass-card">
-            <span class="card-icon">💬</span>
-            <h2>Customer Care</h2>
-            <p>Specializes in FAQs, technical support, and personalized customer service with 24/7 availability.</p>
-            <button class="btn-deploy">Deploy Agent</button>
-        </div>
-    </div>
-
-    <footer>
-        <p>© 2024 Kinetic Labs AI</p>
-        <p style="margin-top:10px; color:#333;">System Status: All systems nominal</p>
-    </footer>
-
-</body>
-</html>
+            margin-top: auto; padding: 40px; text-align
