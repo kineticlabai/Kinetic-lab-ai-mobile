@@ -214,5 +214,34 @@ function toggleBot() {
     </script>
     <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js" defer></script>
 <script src="https://files.bpcontent.cloud/2025/12/30/22/20251230220259-BWTPJMGR.js" defer></script>
+<script>
+  function toggleHospitalityBot() {
+    var container = document.getElementById("bot-window-container");
+    if (container.style.height === "0px" || container.style.height === "") {
+      container.style.height = "500px"; // Slides it down/open
+    } else {
+      container.style.height = "0px"; // Slides it back up/closed
+    }
+  }
+
+  // Your Botpress Settings
+  window.botpress.on("webchat:ready", () => {
+    window.botpress.open();
+  });
+  
+  window.botpress.init({
+    "botId": "ba8b4c60-781f-441e-a776-48722f6ec615",
+    "clientId": "461fb4be-03e2-40e0-ba2d-c1d8ba75dbc4",
+    "selector": "#webchat",
+    "configuration": {
+      "version": "v2",
+      "color": "#3276EA", // You can change this to your green!
+      "variant": "solid",
+      "headerVariant": "glass",
+      "themeMode": "dark", // Changed to dark to match your site
+      "footer": "" // I left this blank to try and hide the tag
+    }
+  });
+</script>
 </body>
 </html>
