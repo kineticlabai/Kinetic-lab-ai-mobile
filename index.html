@@ -10,51 +10,33 @@
     <style>
         :root { 
             --bg: #020408; 
-            --accent: #4facfe; /* Back to your original Cyan/Blue */
+            --accent: #4facfe; 
             --glass: rgba(255, 255, 255, 0.03); 
             --border: rgba(255, 255, 255, 0.1); 
         }
 
-        body, html { 
-            margin: 0; padding: 0; 
-            background-color: var(--bg); 
-            color: white; 
-            font-family: 'Montserrat', sans-serif; 
-            overflow-x: hidden; 
-            min-height: 100vh; 
-        }
+        body, html { margin: 0; padding: 0; background-color: var(--bg); color: white; font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* The Moving Background Canvas */
-        #neuralNet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
-
-        .content-layer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
+        /* Background Canvas */
+        #neuralNet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        
+        .content-layer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow-y: auto; }
 
         header { width: 100%; padding: 30px 0; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-
-        h1 { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 12px; margin: 60px 0 20px; text-align: center; }
+        h1 { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 12px; margin: 60px 0 20px; }
 
         .grid { display: flex; gap: 30px; padding: 40px 20px; flex-wrap: wrap; justify-content: center; max-width: 1200px; }
+        .card { width: 320px; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--border); border-top: 1px solid rgba(79, 172, 254, 0.5); border-radius: 30px; padding: 50px 35px; text-align: center; }
 
-        .card { 
-            width: 320px; background: var(--glass); backdrop-filter: blur(25px); 
-            border: 1px solid var(--border); border-top: 1px solid rgba(79, 172, 254, 0.5); 
-            border-radius: 30px; padding: 50px 35px; text-align: center; transition: 0.4s ease-out; 
-        }
-
-        .btn { background: transparent; border: 1px solid var(--accent); color: white; padding: 12px 30px; border-radius: 5px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn { background: transparent; border: 1px solid var(--accent); color: white; padding: 12px 30px; border-radius: 5px; cursor: pointer; text-transform: uppercase; transition: 0.3s; font-weight: bold; }
         .btn:hover { background: var(--accent); color: black; box-shadow: 0 0 20px var(--accent); }
 
-        /* The Slide-Up Bot Window */
-        #bot-window-container {
-            height: 0; overflow: hidden; 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%; margin-top: 20px;
-        }
+        /* Bot Window */
+        #bot-window-container { height: 0; overflow: hidden; transition: all 0.5s ease-in-out; width: 100%; margin-top: 20px; }
+        #webchat { width: 100%; height: 500px; border-radius: 15px; border: 1px solid var(--accent); background: #000; }
 
-        #webchat { width: 100%; height: 500px; border-radius: 15px; border: 1px solid var(--accent); }
-
-        /* Hide the floating bubble */
-        .bpFab { display: none !important; }
+        /* Kill Bubble */
+        .bpFab, #bp-webchat-container { display: none !important; }
     </style>
 </head>
 <body>
@@ -62,23 +44,15 @@
     <canvas id="neuralNet"></canvas>
 
     <div class="content-layer">
-        <header>
-            <div class="logo">⚡ KINETIC LABS AI</div>
-        </header>
-
+        <header><div class="logo">⚡ KINETIC LABS AI</div></header>
         <h1>Autonomous Agents</h1>
-
         <div class="grid">
             <div class="card">
                 <h2>Hospitality</h2>
                 <p>Order memorization and payment processing core active.</p>
                 <button class="btn" onclick="toggleBot()">Deploy Agent</button>
-                
-                <div id="bot-window-container">
-                    <div id="webchat"></div>
-                </div>
+                <div id="bot-window-container"><div id="webchat"></div></div>
             </div>
-
             <div class="card">
                 <h2>Scheduling</h2>
                 <p>Temporal engine for booking and data entry automation.</p>
@@ -90,44 +64,69 @@
     <script>
         const canvas = document.getElementById('neuralNet');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
         let particles = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
+                this.speedX = (Math.random() - 0.5) * 1.2; // Slightly faster
+                this.speedY = (Math.random() - 0.5) * 1.2;
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
             }
             draw() {
-                ctx.fillStyle = '#4facfe';
+                ctx.fillStyle = 'rgba(79, 172, 254, 0.9)';
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); // Slightly larger dots
                 ctx.fill();
             }
         }
-        function init() { for (let i = 0; i < 100; i++) particles.push(new Particle()); }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < 120; i++) particles.push(new Particle()); // Increased particle count for more lines
+        }
+
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Connection distance increased to 180 for more density
+                    if (distance < 180) {
+                        ctx.strokeStyle = `rgba(79, 172, 254, ${1.2 - distance/180})`;
+                        ctx.lineWidth = 0.8; // Thicker lines
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
             requestAnimationFrame(animate);
         }
         init(); animate();
-    </script>
 
-    <script>
         function toggleBot() {
-            var container = document.getElementById("bot-window-container");
+            const container = document.getElementById("bot-window-container");
             if (container.style.height === "0px" || container.style.height === "") {
                 container.style.height = "510px";
                 window.botpress.open();
@@ -140,11 +139,12 @@
             "botId": "ba8b4c60-781f-441e-a776-48722f6ec615",
             "clientId": "461fb4be-03e2-40e0-ba2d-c1d8ba75dbc4",
             "selector": "#webchat",
-            "configuration": {
-                "themeMode": "dark",
-                "color": "#4facfe",
-                "footer": "" 
-            }
+            "configuration": { "themeMode": "dark", "color": "#4facfe", "footer": "" }
+        });
+
+        window.botpress.on("webchat:ready", () => {
+            const fab = document.querySelector('.bpFab');
+            if (fab) fab.style.display = 'none';
         });
     </script>
 </body>
