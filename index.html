@@ -3,245 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINETIC LABS AI | NEURAL INTERFACE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>KINETIC LABS AI</title>
+    
+    <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+
     <style>
-        <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<style>
-  /* This hides the floating bubble */
-  #webchat .bpFab { display: none !important; }
-  
-  /* This creates the smooth slide effect */
-  #bot-window-container {
-    height: 0;
-    overflow: hidden;
-    transition: all 0.5s ease-in-out;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 500px; /* Limits width so it looks good on desktop */
-  }
-</style>
-
-        :root {
-            --bg: #020408;
-            --accent: #4facfe;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+        :root { 
+            --bg: #020408; 
+            --accent: #39FF14; /* Kinetic Neon Green */
+            --glass: rgba(255, 255, 255, 0.03); 
+            --border: rgba(255, 255, 255, 0.1); 
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--bg); 
+            color: white; 
+            font-family: 'Montserrat', sans-serif; 
+            overflow-x: hidden; 
+            min-height: 100vh; 
         }
 
-        #neuralNet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
-
-        .content-layer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
-
-        header { width: 100%; padding: 30px 0; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .logo { font-weight: 900; letter-spacing: 5px; font-size: 1.2rem; color: #fff; }
-
-        h1 { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 12px; margin: 60px 0 20px; text-align: center; }
-
-        .grid { display: flex; gap: 30px; padding: 40px 20px; flex-wrap: wrap; justify-content: center; max-width: 1200px; }
-
-        /* GLASS CARDS */
-        .card {
-            width: 320px; background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border); border-top: 1px solid rgba(79, 172, 254, 0.5);
-            border-radius: 30px; padding: 50px 35px; text-align: center; transition: 0.4s ease-out;
-        }
-        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
-
-        .icon { font-size: 3rem; margin-bottom: 25px; display: block; filter: drop-shadow(0 0 10px var(--accent)); }
-        h2 { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 20px; font-weight: 900; }
-        p { color: #aaa; line-height: 1.6; font-size: 0.85rem; margin-bottom: 35px; height: 80px; }
-
-        .btn {
-            background: transparent; border: 1px solid var(--accent); color: white;
-            padding: 12px 30px; border-radius: 100px; font-weight: 900; font-size: 0.7rem;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
-        .btn:hover { background: var(--accent); color: black; box-shadow: 0 0 20px var(--accent); }
-
-        /* THE CHAT INTERFACE */
-        #chat-overlay {
-            position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 450px; height: 500px;
-            background: #0a0f1a; border: 1px solid var(--accent);
-            border-radius: 20px 20px 0 0; z-index: 1000;
-            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; box-shadow: 0 -10px 50px rgba(0,0,0,0.8);
+        .header { 
+            width: 100%; 
+            padding: 30px 0; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border); 
+            backdrop-filter: blur(10px); 
         }
 
-        .chat-header { padding: 15px 20px; background: rgba(79, 172, 254, 0.1); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .chat-title { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); font-weight: bold; }
-        .close-btn { cursor: pointer; font-size: 1.2rem; opacity: 0.5; }
+        h1 { 
+            font-size: clamp(1.8rem, 8vw, 3.5rem); 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 12px; 
+            margin: 60px 0 20px; 
+            text-align: center; 
+        }
 
-        #chat-body { flex: 1; padding: 20px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.5; color: #4facfe; }
-        .bot-msg { margin-bottom: 15px; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .grid { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            padding: 40px 20px; 
+        }
 
-        .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-        input { background: transparent; border: 1px solid var(--border); color: white; padding: 10px; flex: 1; border-radius: 5px; font-size: 0.8rem; }
+        .card { 
+            width: 100%; 
+            max-width: 400px; 
+            background: var(--glass); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid var(--border); 
+            border-top: 1px solid rgba(57, 255, 20, 0.5); 
+            border-radius: 30px; 
+            padding: 50px 35px; 
+            text-align: center; 
+            transition: 0.4s ease-out; 
+        }
+
+        .btn { 
+            background: transparent; 
+            border: 1px solid var(--accent); 
+            color: white; 
+            padding: 12px 30px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-weight: bold; 
+            transition: 0.3s; 
+        }
+
+        .btn:hover { 
+            background: var(--accent); 
+            color: black; 
+            box-shadow: 0 0 20px var(--accent); 
+        }
+
+        /* The Slide-Up Container Styling */
+        #hospitality-bot-container {
+            height: 0;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            max-width: 450px;
+            margin-top: 20px;
+        }
+
+        #webchat {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+        }
+
+        /* Hides the default floating bubble */
+        .bpFab { display: none !important; }
     </style>
 </head>
 <body>
 
-    <canvas id="neuralNet"></canvas>
+    <header class="header">
+        <div class="logo">⚡ KINETIC LABS AI</div>
+    </header>
 
-    <div class="content-layer">
-        <header><div class="logo">⚡ KINETIC LABS AI</div></header>
-        <h1>Autonomous Agents</h1>
+    <h1>Autonomous Agents</h1>
 
-        <div class="grid">
-            <div class="card">
-                <span class="icon">🍽️</span>
-                <h2>Hospitality</h2>
-                <p>Order memorization and payment processing core active.</p>
-                <button class="btn" onclick="toggleHospitalityBot()">Deploy Agent</button>
-
-<div id="bot-window-container">
-  <div id="webchat" style="width: 100%; height: 500px;"></div>
-</div>
-
-
-<script>
-function toggleBot() {
-  var container = document.getElementById("bot-container");
-  if (container.style.display === "none") {
-    container.style.display = "block";
-    // Small delay to allow the 'display' to register before animating height
-    setTimeout(function() {
-      container.style.height = "500px";
-    }, 10);
-  } else {
-    container.style.height = "0";
-    setTimeout(function() {
-      container.style.display = "none";
-    }, 500);
-  }
-}
-</script>
-
-<div id="bot-container" style="display:none; height: 0; overflow: hidden; transition: all 0.5s ease; margin-top: 20px;">
-  <iframe 
-    src="https://mediafiles.botpress.cloud/YOUR_BOT_ID/webchat/bot.html" 
-    width="100%" 
-    height="500px" 
-    style="border: none; border-radius: 15px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);">
-  </iframe>
-</div>
-
-            </div>
-
-            <div class="card">
-                <span class="icon">📅</span>
-                <h2>Scheduling</h2>
-                <p>Temporal engine for booking and data entry automation.</p>
-                <button class="btn" onclick="deploy('Scheduling Agent', 'Temporal engine online. Accessing calendar for Jan 2026... I see openings on Tuesday at 2 PM. Would you like to log an appointment?')">Deploy Agent</button>
-            </div>
-
-            <div class="card">
-                <span class="icon">💬</span>
-                <h2>Support</h2>
-                <p>24/7 Knowledge mesh for technical and F&Q resolution.</p>
-                <button class="btn" onclick="deploy('Support Agent', 'Knowledge Mesh connected. I have indexed your technical manuals. Please state the issue you are experiencing with your hardware.')">Deploy Agent</button>
+    <div class="grid">
+        <div class="card">
+            <h2>Hospitality</h2>
+            <p>Order memorization and payment processing core active.</p>
+            <button class="btn" onclick="toggleBot()">Deploy Agent</button>
+            
+            <div id="hospitality-bot-container">
+                <div id="webchat"></div>
             </div>
         </div>
-    </div>
 
-    <div id="chat-overlay">
-        <div class="chat-header">
-            <span class="chat-title" id="active-agent">AGENT_ID: NONE</span>
-            <span class="close-btn" onclick="closeChat()">×</span>
-        </div>
-        <div id="chat-body"></div>
-        <div class="chat-input-area">
-            <input type="text" placeholder="Type command..." onkeydown="if(event.key==='Enter') simulateChat()">
+        <div class="card">
+            <h2>Scheduling</h2>
+            <p>Temporal engine for booking and data entry automation.</p>
+            <button class="btn">Coming Soon</button>
         </div>
     </div>
 
     <script>
-        function deploy(name, intro) {
-            document.getElementById('chat-overlay').style.bottom = "0";
-            document.getElementById('active-agent').innerText = "AGENT_ID: " + name.toUpperCase();
-            const body = document.getElementById('chat-body');
-            body.innerHTML = `<div class="bot-msg"><b>[${name}]</b>: ${intro}</div>`;
-        }
-
-        function closeChat() { document.getElementById('chat-overlay').style.bottom = "-100%"; }
-
-        function simulateChat() {
-            const input = document.querySelector('input');
-            const body = document.getElementById('chat-body');
-            if(input.value) {
-                body.innerHTML += `<div style="color:white; margin-bottom:10px;">> ${input.value}</div>`;
-                setTimeout(() => {
-                    body.innerHTML += `<div class="bot-msg"><b>[SYSTEM]</b>: Command received. Processing logic for "${input.value}"...</div>`;
-                    body.scrollTop = body.scrollHeight;
-                }, 600);
-                input.value = '';
+        // Toggle Function for the Slide-up effect
+        function toggleBot() {
+            var container = document.getElementById("hospitality-bot-container");
+            if (container.style.height === "0px" || container.style.height === "") {
+                container.style.height = "520px"; // Give room for the border
+                window.botpress.open();
+            } else {
+                container.style.height = "0px";
             }
         }
 
-        // Neural Canvas Script (Same as before)
-        const canvas = document.getElementById('neuralNet');
-        const ctx = canvas.getContext('2d');
-        let dots = [];
-        function init() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            dots = []; for (let i = 0; i < 70; i++) { dots.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5 }); }
-        }
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "rgba(79, 172, 254, 0.4)";
-            dots.forEach(d => {
-                d.x += d.vx; d.y += d.vy;
-                if(d.x<0 || d.x>canvas.width) d.vx*=-1; if(d.y<0 || d.y>canvas.height) d.vy*=-1;
-                ctx.beginPath(); ctx.arc(d.x, d.y, 1.5, 0, Math.PI*2); ctx.fill();
-                dots.forEach(d2 => {
-                    let dist = Math.hypot(d.x-d2.x, d.y-d2.y);
-                    if(dist<150) { ctx.strokeStyle=`rgba(79,172,254,${1-dist/150})`; ctx.lineWidth=0.5; ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d2.x,d2.y); ctx.stroke(); }
-                });
-            });
-            requestAnimationFrame(draw);
-        }
-        window.addEventListener('resize', init); init(); draw();
-    </script>
-    <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/12/30/22/20251230220259-BWTPJMGR.js" defer></script>
-<script>
-  function toggleHospitalityBot() {
-    var container = document.getElementById("bot-window-container");
-    if (container.style.height === "0px" || container.style.height === "") {
-      container.style.height = "500px"; // Slides it down/open
-    } else {
-      container.style.height = "0px"; // Slides it back up/closed
-    }
-  }
+        // Initialize Botpress
+        window.botpress.init({
+            "botId": "ba8b4c60-781f-441e-a776-48722f6ec615",
+            "clientId": "461fb4be-03e2-40e0-ba2d-c1d8ba75dbc4",
+            "selector": "#webchat",
+            "configuration": {
+                "version": "v2",
+                "themeMode": "dark",
+                "color": "#39FF14",
+                "variant": "solid",
+                "footer": "" 
+            }
+        });
 
-  // Your Botpress Settings
-  window.botpress.on("webchat:ready", () => {
-    window.botpress.open();
-  });
-  
-  window.botpress.init({
-    "botId": "ba8b4c60-781f-441e-a776-48722f6ec615",
-    "clientId": "461fb4be-03e2-40e0-ba2d-c1d8ba75dbc4",
-    "selector": "#webchat",
-    "configuration": {
-      "version": "v2",
-      "color": "#3276EA", // You can change this to your green!
-      "variant": "solid",
-      "headerVariant": "glass",
-      "themeMode": "dark", // Changed to dark to match your site
-      "footer": "" // I left this blank to try and hide the tag
-    }
-  });
-</script>
+        // Hide the bubble if it tries to appear
+        window.botpress.on("webchat:ready", () => {
+            const bubble = document.querySelector('.bpFab');
+            if (bubble) bubble.style.display = 'none';
+        });
+    </script>
+
 </body>
 </html>
