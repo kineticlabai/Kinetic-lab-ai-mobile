@@ -10,14 +10,13 @@
     <style>
         :root { 
             --bg: #020408; 
-            --accent: #39FF14; /* Kinetic Neon Green */
+            --accent: #4facfe; /* Back to your original Cyan/Blue */
             --glass: rgba(255, 255, 255, 0.03); 
             --border: rgba(255, 255, 255, 0.1); 
         }
 
         body, html { 
-            margin: 0; 
-            padding: 0; 
+            margin: 0; padding: 0; 
             background-color: var(--bg); 
             color: white; 
             font-family: 'Montserrat', sans-serif; 
@@ -25,141 +24,128 @@
             min-height: 100vh; 
         }
 
-        .header { 
-            width: 100%; 
-            padding: 30px 0; 
-            text-align: center; 
-            border-bottom: 1px solid var(--border); 
-            backdrop-filter: blur(10px); 
-        }
+        /* The Moving Background Canvas */
+        #neuralNet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
 
-        h1 { 
-            font-size: clamp(1.8rem, 8vw, 3.5rem); 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            letter-spacing: 12px; 
-            margin: 60px 0 20px; 
-            text-align: center; 
-        }
+        .content-layer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
 
-        .grid { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 30px; 
-            padding: 40px 20px; 
-        }
+        header { width: 100%; padding: 30px 0; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+
+        h1 { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 12px; margin: 60px 0 20px; text-align: center; }
+
+        .grid { display: flex; gap: 30px; padding: 40px 20px; flex-wrap: wrap; justify-content: center; max-width: 1200px; }
 
         .card { 
-            width: 100%; 
-            max-width: 400px; 
-            background: var(--glass); 
-            backdrop-filter: blur(25px); 
-            border: 1px solid var(--border); 
-            border-top: 1px solid rgba(57, 255, 20, 0.5); 
-            border-radius: 30px; 
-            padding: 50px 35px; 
-            text-align: center; 
-            transition: 0.4s ease-out; 
+            width: 320px; background: var(--glass); backdrop-filter: blur(25px); 
+            border: 1px solid var(--border); border-top: 1px solid rgba(79, 172, 254, 0.5); 
+            border-radius: 30px; padding: 50px 35px; text-align: center; transition: 0.4s ease-out; 
         }
 
-        .btn { 
-            background: transparent; 
-            border: 1px solid var(--accent); 
-            color: white; 
-            padding: 12px 30px; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-weight: bold; 
-            transition: 0.3s; 
+        .btn { background: transparent; border: 1px solid var(--accent); color: white; padding: 12px 30px; border-radius: 5px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { background: var(--accent); color: black; box-shadow: 0 0 20px var(--accent); }
+
+        /* The Slide-Up Bot Window */
+        #bot-window-container {
+            height: 0; overflow: hidden; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%; margin-top: 20px;
         }
 
-        .btn:hover { 
-            background: var(--accent); 
-            color: black; 
-            box-shadow: 0 0 20px var(--accent); 
-        }
+        #webchat { width: 100%; height: 500px; border-radius: 15px; border: 1px solid var(--accent); }
 
-        /* The Slide-Up Container Styling */
-        #hospitality-bot-container {
-            height: 0;
-            overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%;
-            max-width: 450px;
-            margin-top: 20px;
-        }
-
-        #webchat {
-            width: 100%;
-            height: 500px;
-            border: 1px solid var(--accent);
-            border-radius: 20px;
-        }
-
-        /* Hides the default floating bubble */
+        /* Hide the floating bubble */
         .bpFab { display: none !important; }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="logo">⚡ KINETIC LABS AI</div>
-    </header>
+    <canvas id="neuralNet"></canvas>
 
-    <h1>Autonomous Agents</h1>
+    <div class="content-layer">
+        <header>
+            <div class="logo">⚡ KINETIC LABS AI</div>
+        </header>
 
-    <div class="grid">
-        <div class="card">
-            <h2>Hospitality</h2>
-            <p>Order memorization and payment processing core active.</p>
-            <button class="btn" onclick="toggleBot()">Deploy Agent</button>
-            
-            <div id="hospitality-bot-container">
-                <div id="webchat"></div>
+        <h1>Autonomous Agents</h1>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Hospitality</h2>
+                <p>Order memorization and payment processing core active.</p>
+                <button class="btn" onclick="toggleBot()">Deploy Agent</button>
+                
+                <div id="bot-window-container">
+                    <div id="webchat"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="card">
-            <h2>Scheduling</h2>
-            <p>Temporal engine for booking and data entry automation.</p>
-            <button class="btn">Coming Soon</button>
+            <div class="card">
+                <h2>Scheduling</h2>
+                <p>Temporal engine for booking and data entry automation.</p>
+                <button class="btn">Coming Soon</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Toggle Function for the Slide-up effect
+        const canvas = document.getElementById('neuralNet');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = '#4facfe';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function init() { for (let i = 0; i < 100; i++) particles.push(new Particle()); }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        init(); animate();
+    </script>
+
+    <script>
         function toggleBot() {
-            var container = document.getElementById("hospitality-bot-container");
+            var container = document.getElementById("bot-window-container");
             if (container.style.height === "0px" || container.style.height === "") {
-                container.style.height = "520px"; // Give room for the border
+                container.style.height = "510px";
                 window.botpress.open();
             } else {
                 container.style.height = "0px";
             }
         }
 
-        // Initialize Botpress
         window.botpress.init({
             "botId": "ba8b4c60-781f-441e-a776-48722f6ec615",
             "clientId": "461fb4be-03e2-40e0-ba2d-c1d8ba75dbc4",
             "selector": "#webchat",
             "configuration": {
-                "version": "v2",
                 "themeMode": "dark",
-                "color": "#39FF14",
-                "variant": "solid",
+                "color": "#4facfe",
                 "footer": "" 
             }
         });
-
-        // Hide the bubble if it tries to appear
-        window.botpress.on("webchat:ready", () => {
-            const bubble = document.querySelector('.bpFab');
-            if (bubble) bubble.style.display = 'none';
-        });
     </script>
-
 </body>
 </html>
